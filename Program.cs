@@ -330,6 +330,8 @@ namespace GuTenTak.Sivir
                     E.Cast();
                 }
 
+                if (!(args.Target != null))
+                    return;
                 if ((args.Slot == SpellSlot.Q || args.Slot == SpellSlot.W || args.Slot == SpellSlot.E ||
                args.Slot == SpellSlot.R) && sender.IsEnemy && E.IsReady())
                 {
