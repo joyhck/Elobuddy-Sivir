@@ -130,12 +130,10 @@ namespace GuTenTak.Sivir
                 {
                     Q.Cast(qMinions.CastPosition);
                 }
-                if (W.IsReady() && EntityManager.MinionsAndMonsters.GetLaneMinions().Count(a => a.Distance(_Player.Position) <= _Player.GetAutoAttackRange()) >= ModesMenu2["MinionLC"].Cast<Slider>().CurrentValue &&
-                    ModesMenu2["FarmW"].Cast<CheckBox>().CurrentValue &&
-                    PlayerInstance.ManaPercent >= Program.ModesMenu2["ManaLW"].Cast<Slider>().CurrentValue)
+                if (W.IsReady() && ModesMenu2["FarmW"].Cast<CheckBox>().CurrentValue && PlayerInstance.ManaPercent >= Program.ModesMenu2["ManaLW"].Cast<Slider>().CurrentValue && EntityManager.MinionsAndMonsters.GetLaneMinions().Count(a => a.Distance(_Player.Position) <= _Player.GetAutoAttackRange()) >= ModesMenu2["MinionLC"].Cast<Slider>().CurrentValue)
                 {
                     W.Cast();
-                }
+                }  
             }
 
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear))
@@ -331,6 +329,10 @@ namespace GuTenTak.Sivir
                     Program.Botrk.Cast(target);
                 }
             }
+        }
+
+        internal static void LastHit()
+        {
         }
 
         internal static void DoQSS()

@@ -314,27 +314,13 @@ namespace GuTenTak.Sivir
 
         public static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
+            if (sender.IsMe || sender.IsAlly)
+                return;
             var SpellShield = ModesMenu3["SpellShield"].Cast<CheckBox>().CurrentValue;
-            /*
-            try
-            {
-                if (SpellShield)
-                {
-                    if (sender is AIHeroClient && sender.IsEnemy && args.Target.IsMe && !args.SData.IsAutoAttack() && E.IsReady())
-                        E.Cast();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-            }
-        }
-       */
             if (SpellShield)
             {
                 var Gold = ModesMenu3["GoldCard"].Cast<CheckBox>().CurrentValue;
                 var Red = ModesMenu3["RedCard"].Cast<CheckBox>().CurrentValue;
-                if (sender.IsMe || sender.IsAlly) return;
                 if (Gold && sender.HasBuff("Pick A Card Gold") && E.IsReady() && (args.Target != null && args.Target.IsMe))
                 {
                     E.Cast();
