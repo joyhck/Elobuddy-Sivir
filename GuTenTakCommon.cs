@@ -101,6 +101,8 @@ namespace GuTenTak.Sivir
                 if (PlayerInstance.IsInAutoAttackRange(target) && W.IsReady() && useHW && PlayerInstance.ManaPercent >= Program.ModesMenu1["ManaHW"].Cast<Slider>().CurrentValue)
                 {
                     W.Cast();
+                    Orbwalker.ResetAutoAttack();
+                    Player.IssueOrder(GameObjectOrder.AttackTo, target);
                 }
 
             }
@@ -135,6 +137,8 @@ namespace GuTenTak.Sivir
                 if (W.IsReady() && ModesMenu2["FarmW"].Cast<CheckBox>().CurrentValue && PlayerInstance.ManaPercent >= Program.ModesMenu2["ManaLW"].Cast<Slider>().CurrentValue && EntityManager.MinionsAndMonsters.GetLaneMinions().Count(a => a.Distance(_Player.Position) <= _Player.GetAutoAttackRange()) >= ModesMenu2["MinionLC"].Cast<Slider>().CurrentValue)
                 {
                     W.Cast();
+                    Orbwalker.ResetAutoAttack();
+                    Player.IssueOrder(GameObjectOrder.AttackTo, target);
                 }  
             }
 
