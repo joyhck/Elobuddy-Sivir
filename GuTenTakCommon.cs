@@ -79,6 +79,8 @@ namespace GuTenTak.Sivir
                 if (PlayerInstance.IsInAutoAttackRange(target) && W.IsReady() && useAW)
                 {
                     W.Cast();
+                    Orbwalker.ResetAutoAttack();
+                    Player.IssueOrder(GameObjectOrder.AttackTo, target);
                 }
 
                 if (!PlayerInstance.IsAttackingPlayer && Q.IsInRange(ATarget) && Q.IsReady() && useAQ && AQp.HitChance >= HitChance.High)
