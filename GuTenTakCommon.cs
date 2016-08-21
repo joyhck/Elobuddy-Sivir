@@ -66,15 +66,14 @@ namespace GuTenTak.Sivir
         {
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
             {
-                if (target == null || !(target is AIHeroClient) || target.IsDead || target.IsInvulnerable || !target.IsEnemy || target.IsPhysicalImmune || target.IsZombie)
+                var enemy = target as AIHeroClient;
+                if (!enemy.IsValidTarget() || !enemy.IsEnemy || target.IsPhysicalImmune || enemy.IsZombie)
                     return;
                 var ATarget = TargetSelector.GetTarget(Q.Range, DamageType.Physical);
+                if (ATarget == null) return;
                 var useAQ = ModesMenu1["ComboQ"].Cast<CheckBox>().CurrentValue;
                 var useAW = ModesMenu1["ComboW"].Cast<CheckBox>().CurrentValue;
                 var AQp = Q.GetPrediction(ATarget);
-                var enemy = target as AIHeroClient;
-                if (enemy == null)
-                    return;
 
                 if (PlayerInstance.IsInAutoAttackRange(target) && W.IsReady() && useAW)
                 {
@@ -82,7 +81,7 @@ namespace GuTenTak.Sivir
                     Orbwalker.ResetAutoAttack();
                 }
 
-                if (!PlayerInstance.IsAttackingPlayer && Q.IsInRange(ATarget) && Q.IsReady() && useAQ && AQp.HitChance >= HitChance.High)
+                if (useAQ && Q.IsInRange(ATarget) && Q.IsReady() && !PlayerInstance.IsAttackingPlayer && AQp.HitChance >= HitChance.High)
                 {
                     Q.Cast(AQp.CastPosition);
                 }
@@ -90,14 +89,12 @@ namespace GuTenTak.Sivir
             
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass))
             {
-                if (target == null || !(target is AIHeroClient) || target.IsDead || target.IsInvulnerable || !target.IsEnemy || target.IsPhysicalImmune || target.IsZombie)
+                var enemy = target as AIHeroClient;
+                if (!enemy.IsValidTarget() || !enemy.IsEnemy || target.IsPhysicalImmune || enemy.IsZombie)
                     return;
                 var useHW = ModesMenu1["HarassW"].Cast<CheckBox>().CurrentValue;
-                var enemy = target as AIHeroClient;
-                if (enemy == null)
-                    return;
-
-                if (PlayerInstance.IsInAutoAttackRange(target) && W.IsReady() && useHW && PlayerInstance.ManaPercent >= Program.ModesMenu1["ManaHW"].Cast<Slider>().CurrentValue)
+                
+                if (useHW && PlayerInstance.ManaPercent >= Program.ModesMenu1["ManaHW"].Cast<Slider>().CurrentValue && W.IsReady() && PlayerInstance.IsInAutoAttackRange(target))
                 {
                     W.Cast();
                     Orbwalker.ResetAutoAttack();
@@ -110,12 +107,11 @@ namespace GuTenTak.Sivir
          public static void Harass()
         {
             var Target = TargetSelector.GetTarget(Q.Range, DamageType.Physical);
-            if (Target == null) return;
+            if (!Target.IsValid()) return;
             var useQ = ModesMenu1["HarassQ"].Cast<CheckBox>().CurrentValue;
             var Qp = Q.GetPrediction(Target);
-            if (!Target.IsValid()) return;
 
-            if (Q.IsInRange(Target) && Q.IsReady() && useQ && Qp.HitChance >= HitChance.High && !Target.IsInvulnerable && PlayerInstance.ManaPercent >= Program.ModesMenu1["HarassMana"].Cast<Slider>().CurrentValue)
+            if (useQ && Q.IsReady() && PlayerInstance.ManaPercent >= Program.ModesMenu1["HarassMana"].Cast<Slider>().CurrentValue && !Target.IsInvulnerable && Q.IsInRange(Target) && Qp.HitChance >= HitChance.High)
             {
                     Q.Cast(Qp.CastPosition);
             }
@@ -377,12 +373,11 @@ namespace GuTenTak.Sivir
                 foreach (var enemy in EntityManager.Heroes.Enemies.Where(a => !a.IsDead && !a.IsZombie && a.Health > 0))
                 {
                     if (enemy == null) return;
-                    if (enemy.IsValidTarget(Q.Range) && enemy.HealthPercent <= 50)
+                    if (enemy.IsValidTarget(Q.Range) && enemy.HealthPercent <= 55)
                     {
                         var Qp = Q.GetPrediction(enemy);
                         if (DamageLib.QCalc(enemy) >= enemy.Health && Q.IsReady() && Q.IsInRange(enemy) && Program.ModesMenu1["KQ"].Cast<CheckBox>().CurrentValue && Qp.HitChance >= HitChance.High && !enemy.IsInvulnerable)
                         {
-
                             Q.Cast(Qp.CastPosition);
                         }
                     }
